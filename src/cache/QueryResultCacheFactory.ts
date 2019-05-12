@@ -37,7 +37,7 @@ export class QueryResultCacheFactory {
             return new RedisQueryResultCache(this.connection, "ioredis/cluster");
 
         if ((this.connection.options.cache as any).type === "local") {
-            let namespace = process.env.CACHE_NAMESPACE || "__typeorm_query_cache__";
+            const namespace = process.env.CACHE_NAMESPACE || "__typeorm_query_cache__";
             return new LocalStorageQueryResultCache(namespace);
         }
 
