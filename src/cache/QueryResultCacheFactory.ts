@@ -2,6 +2,7 @@ import {RedisQueryResultCache} from "./RedisQueryResultCache";
 import {DbQueryResultCache} from "./DbQueryResultCache";
 import {QueryResultCache} from "./QueryResultCache";
 import {Connection} from "../connection/Connection";
+import {LocalStorageQueryResultCache} from "./LocalStorageQueryResultCache";
 
 /**
  * Caches query result into Redis database.
@@ -34,6 +35,10 @@ export class QueryResultCacheFactory {
 
         if ((this.connection.options.cache as any).type === "ioredis/cluster")
             return new RedisQueryResultCache(this.connection, "ioredis/cluster");
+
+        if ((this.connection.options.cache as any).type === "local") {
+            return new LocalStorageQueryResultCache(process.env.CACHE_NAMESPACE || "__typeorm_query_cache");
+        }
 
         return new DbQueryResultCache(this.connection);
     }
